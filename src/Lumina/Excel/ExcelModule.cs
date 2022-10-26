@@ -237,7 +237,7 @@ namespace Lumina.Excel
                     
                     if( _gameData.Options.PanicOnSheetChecksumMismatch )
                     {
-                        throw new ExcelSheetColumnChecksumMismatchException( name, expectedHash.Value, actualHash );
+                        //throw new ExcelSheetColumnChecksumMismatchException( name, expectedHash.Value, actualHash );
                     }
                 }
             }

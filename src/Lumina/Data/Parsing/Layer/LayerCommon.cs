@@ -4,6 +4,7 @@ using System.IO;
 using Lumina.Extensions;
 using Vector3 = Lumina.Data.Parsing.Common.Vector3;
 using Transformation = Lumina.Data.Parsing.Common.Transformation;
+using SaintCoinach.Graphics.Sgb;
 // ReSharper disable InconsistentNaming
 // ReSharper disable NotAccessedField.Local
 // ReSharper disable MemberCanBePrivate.Global
@@ -639,6 +640,7 @@ namespace Lumina.Data.Parsing.Layer
             private byte[] _padding01; //[3]
             public TransformState InitialTransformState;
             public ColourState InitialColorState;
+            public SgbFile SgbFileObj;
 
             public SGOverriddenMember[] SGOverriddenMembers;
             public MovePathSettings MovePathSettings;
@@ -664,6 +666,16 @@ namespace Lumina.Data.Parsing.Layer
                 ret.InitialTransformState = (TransformState) br.ReadInt32();
                 ret.InitialColorState = (ColourState) br.ReadInt32();
                 var end = br.BaseStream.Position;
+
+                // Parse sgb with SaintCoinach
+                // It's hacky, but it works
+                var gameData = Lumina.GameData.CurrentContext?.Value;
+                var rawData = gameData.GetFile( ret.AssetPath )?.Data;
+                if (gameData != null && rawData != null)
+                {
+                    var SgbF = new SgbFile( gameData, rawData );
+                    ret.SgbFileObj = SgbF;
+                }
 
                 //TODO unlock the secrets
 //                if( ret.OverriddenMembersCount > 0 )
